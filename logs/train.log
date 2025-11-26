@@ -1,0 +1,26 @@
+2025-11-26 15:39:15 - root - main.py:286 - INFO: 加载MNIST数据集...
+2025-11-26 15:39:18 - root - main.py:300 - INFO: 创建神经网络模型...
+2025-11-26 15:39:18 - root - main.py:30 - INFO: 初始化神经网络 | 输入维度: 784 | 隐藏层: [128, 64] | 输出维度: 10 | 激活函数: relu
+2025-11-26 15:39:18 - root - main.py:308 - INFO: 开始训练...
+2025-11-26 15:39:18 - root - main.py:139 - INFO: Epoch 1/20, Loss: 0.8008, Time: 0.51s
+2025-11-26 15:39:19 - root - main.py:139 - INFO: Epoch 2/20, Loss: 0.3129, Time: 0.45s
+2025-11-26 15:39:19 - root - main.py:139 - INFO: Epoch 3/20, Loss: 0.2332, Time: 0.49s
+2025-11-26 15:39:20 - root - main.py:139 - INFO: Epoch 4/20, Loss: 0.1835, Time: 0.45s
+2025-11-26 15:39:20 - root - main.py:139 - INFO: Epoch 5/20, Loss: 0.1467, Time: 0.39s
+2025-11-26 15:39:21 - root - main.py:139 - INFO: Epoch 6/20, Loss: 0.1188, Time: 0.40s
+2025-11-26 15:39:21 - root - main.py:139 - INFO: Epoch 7/20, Loss: 0.0971, Time: 0.40s
+2025-11-26 15:39:21 - root - main.py:139 - INFO: Epoch 8/20, Loss: 0.0792, Time: 0.39s
+2025-11-26 15:39:22 - root - main.py:139 - INFO: Epoch 9/20, Loss: 0.0649, Time: 0.40s
+2025-11-26 15:39:22 - root - main.py:139 - INFO: Epoch 10/20, Loss: 0.0525, Time: 0.39s
+2025-11-26 15:39:23 - root - main.py:139 - INFO: Epoch 11/20, Loss: 0.0424, Time: 0.39s
+2025-11-26 15:39:23 - root - main.py:139 - INFO: Epoch 12/20, Loss: 0.0339, Time: 0.42s
+2025-11-26 15:39:23 - root - main.py:139 - INFO: Epoch 13/20, Loss: 0.0269, Time: 0.41s
+2025-11-26 15:39:24 - root - main.py:139 - INFO: Epoch 14/20, Loss: 0.0212, Time: 0.42s
+2025-11-26 15:39:24 - root - main.py:139 - INFO: Epoch 15/20, Loss: 0.0173, Time: 0.40s
+2025-11-26 15:39:25 - root - main.py:139 - INFO: Epoch 16/20, Loss: 0.0149, Time: 0.40s
+2025-11-26 15:39:25 - root - main.py:139 - INFO: Epoch 17/20, Loss: 0.0129, Time: 0.41s
+2025-11-26 15:39:25 - root - main.py:139 - INFO: Epoch 18/20, Loss: 0.0107, Time: 0.39s
+2025-11-26 15:39:26 - root - main.py:139 - INFO: Epoch 19/20, Loss: 0.0088, Time: 0.41s
+2025-11-26 15:39:26 - root - main.py:139 - INFO: Epoch 20/20, Loss: 0.0096, Time: 0.40s
+2025-11-26 15:39:26 - root - main.py:316 - INFO: 在测试集上评估...
+2025-11-26 15:39:26 - root - main.py:318 - INFO: 测试集准确率: 0.9485

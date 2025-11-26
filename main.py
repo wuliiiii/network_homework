@@ -7,10 +7,14 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import roc_curve, auc, accuracy_score, confusion_matrix
 import seaborn as sns
 import time
+import logging
+from logging.handlers import RotatingFileHandler
+import os
+import sys
 
 # 定义神经网络模型
 class NeuralNetwork:
-    def __init__(self, input_size, hidden_sizes, output_size, activation='relu'):
+    def __init__(self, input_size, hidden_sizes, output_size, activation='relu',logger=None):
         """
         初始化神经网络
         :param input_size: 输入特征数量
@@ -20,6 +24,13 @@ class NeuralNetwork:
         """
         self.layers = []
         self.activations = []
+        self.logger = logger or init_logger()
+
+        if self.logger is not None:
+            self.logger.info(
+                f"初始化神经网络 | 输入维度: {input_size} | 隐藏层: {hidden_sizes} | "
+                f"输出维度: {output_size} | 激活函数: {activation}"
+            )
         
         # 选择激活函数
         if activation == 'relu':
@@ -63,8 +74,39 @@ class NeuralNetwork:
         return params
 
 
+def init_logger(log_dir: str = "./logs", log_name: str = "train.log"):
+    os.makedirs(log_dir, exist_ok=True)
+    log_file = os.path.join(log_dir, log_name)
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    logger.handlers.clear()
+
+    # 核心：屏蔽 matplotlib 的 DEBUG/INFO 日志
+    logging.getLogger("matplotlib").setLevel(logging.WARNING)
+    # 可选：屏蔽 seaborn 的日志（若有类似问题）
+    # logging.getLogger("seaborn").setLevel(logging.WARNING)
+
+    # 定义格式和处理器（原有逻辑不变）
+    fmt = "%(asctime)s - %(name)s - %(filename)s:%(lineno)d - %(levelname)s: %(message)s"
+    formatter = logging.Formatter(fmt, datefmt="%Y-%m-%d %H:%M:%S")
+
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+
+    file_handler = RotatingFileHandler(
+        log_file, maxBytes=50 * 1024 * 1024, backupCount=5, encoding="utf-8"
+    )
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    return logger
+
 # 训练和测试函数
-def train(model, train_loader, criterion, optimizer, epochs=10):
+def train(model, train_loader, criterion, optimizer, epochs=10,logger=None):
     """训练模型"""
     train_losses = []
     
@@ -93,7 +135,10 @@ def train(model, train_loader, criterion, optimizer, epochs=10):
         
         # 打印训练进度
         end_time = time.time()
-        print(f"Epoch {epoch+1}/{epochs}, Loss: {avg_loss:.4f}, Time: {end_time-start_time:.2f}s")
+        if logger is not None:
+            logger.info(f"Epoch {epoch+1}/{epochs}, Loss: {avg_loss:.4f}, Time: {end_time-start_time:.2f}s")
+        else:
+            print(f"Epoch {epoch+1}/{epochs}, Loss: {avg_loss:.4f}, Time: {end_time-start_time:.2f}s")
     
     return train_losses
 
@@ -234,9 +279,11 @@ def visualize_samples(X, y_true, y_pred, num_samples=10):
 def main():
     # 设置随机种子，保证结果可复现
     np.random.seed(42)
+    logger = init_logger(log_dir="./logs", log_name= "train.log")
+
     
     # 加载数据（使用10000个样本加速训练）
-    print("加载MNIST数据集...")
+    logger.info(f"加载MNIST数据集...")
     (X_train, y_train), (X_test, y_test), y_test_labels = load_mnist(subset_size=10000)
     
     # 创建数据加载器
@@ -250,25 +297,25 @@ def main():
     output_size = 10  # 10个类别（0-9）
     
     # 创建模型
-    print("创建神经网络模型...")
-    model = NeuralNetwork(input_size, hidden_sizes, output_size, activation='relu')
+    logger.info(f"创建神经网络模型...")
+    model = NeuralNetwork(input_size, hidden_sizes, output_size, activation='relu',logger=logger)
     
     # 定义损失函数和优化器
     criterion = CrossEntropyLoss()
     optimizer = Adam(model.parameters(), lr=0.001)
     
     # 训练模型
-    print("开始训练...")
+    logger.info(f"开始训练...")
     epochs = 20
-    train_losses = train(model, train_loader, criterion, optimizer, epochs)
+    train_losses = train(model, train_loader, criterion, optimizer, epochs,logger)
     
     # 绘制损失曲线
     plot_loss_curve(train_losses)
     
     # 在测试集上评估
-    print("在测试集上评估...")
+    logger.info(f"在测试集上评估...")
     accuracy, true_labels, pred_labels, probs = evaluate(model, test_loader)
-    print(f"测试集准确率: {accuracy:.4f}")
+    logger.info(f"测试集准确率: {accuracy:.4f}")
     
     # 可视化部分测试样本
     visualize_samples(X_test, y_test, pred_labels)
